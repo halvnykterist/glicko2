@@ -90,6 +90,21 @@ impl GameResult {
             score: 0.5,
         }
     }
+
+    /// Constructs a new game result representing a fractional outcome with a player or team
+    /// with rating `opponent_rating`.
+    ///
+    /// A `Glicko2Rating` or `GlickoRating` can be supplied for `opponent_rating`,
+    /// and it will not affect the result of rating calculations
+    /// as the volatility of opponents are not looked at for updating ratings.
+    pub fn frac<T: Into<Glicko2Rating>>(score: f64, opponent_rating: T) -> GameResult {
+        let opponent_glicko2: Glicko2Rating = opponent_rating.into();
+        GameResult {
+            opponent_rating_value: opponent_glicko2.value,
+            opponent_rating_deviation: opponent_glicko2.deviation,
+            score,
+        }
+    }
 }
 
 impl From<GlickoRating> for Glicko2Rating {
